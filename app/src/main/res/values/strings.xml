@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Fitnass</string>
+
+    <string name="reset_value">00:00:00</string>
+</resources>
