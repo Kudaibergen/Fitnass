@@ -3,7 +3,6 @@ package com.akai.fitnass.ui.main;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -15,6 +14,10 @@ import com.akai.fitnass.ui.stopwatch.StopWatchActivity;
 
 import java.util.ArrayList;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+
 public class MainActivity extends AppCompatActivity {
     private DayWorkoutAdapter mAdapter;
     private ArrayList<Workout> days;
@@ -23,17 +26,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ListView listView = findViewById(R.id.listView);
+        ListView listView = findViewById(R.id.list_days);
         Button btnNewDay = findViewById(R.id.btn_day);
 
+        days = new ArrayList<>();
         mAdapter = new DayWorkoutAdapter(this, days);
         listView.setAdapter(mAdapter);
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(DayActivity.getIntent(MainActivity.this, id));
-                return true;
-            }
+        listView.setOnItemLongClickListener((parent, view, position, id) -> {
+            startActivity(DayActivity.getIntent(MainActivity.this, id));
+            return true;
         });
 
         btnNewDay.setOnClickListener(clickListener);
@@ -42,14 +43,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        days = (ArrayList<Workout>) App.getDatabase().workoutDao().getAll();
-        mAdapter.notifyDataSetChanged();
+        CompositeDisposable compositeDisposable = new CompositeDisposable();
+        Disposable disposable = App.getDatabase().workoutDao().getAll()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(workouts -> {
+                    days.clear();
+                    days.addAll(workouts);
+                    mAdapter.notifyDataSetChanged();
+                });
+        compositeDisposable.add(disposable);
     }
 
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            startActivity(StopWatchActivity.getIntent(MainActivity.this));
-        }
-    };
+    private View.OnClickListener clickListener = v -> startActivity(StopWatchActivity.getIntent(MainActivity.this));
 }

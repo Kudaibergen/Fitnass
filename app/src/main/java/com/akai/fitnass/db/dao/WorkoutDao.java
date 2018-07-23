@@ -10,14 +10,17 @@ import com.akai.fitnass.db.domain.Workout;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+
 @Dao
 public interface WorkoutDao {
 
     @Query("SELECT * FROM workout")
-    List<Workout> getAll();
+    Flowable<List<Workout>> getAll();
 
     @Query("SELECT * FROM workout WHERE id = :id")
-    Workout getById(long id);
+    Single<Workout> getById(long id);
 
     @Insert
     void insert(Workout workout);

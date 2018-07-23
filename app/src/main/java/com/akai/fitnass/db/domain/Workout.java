@@ -47,6 +47,6 @@ public class Workout {
 
     @Override
     public String toString() {
-        return "id: " + id + ", date: " + date;
+        return " (id: " + id + ", date: " + date + ", lapsSize: " + laps.size() + ") ";
     }
 }

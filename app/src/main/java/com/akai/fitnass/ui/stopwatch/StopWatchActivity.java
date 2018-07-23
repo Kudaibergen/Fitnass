@@ -48,31 +48,25 @@ public class StopWatchActivity extends AppCompatActivity {
             return;
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Workout workout = new Workout();
-                String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-                workout.setDate(date);
-                workout.setLaps(mElements);
-                App.getDatabase().workoutDao().insert(workout);
-            }
+        new Thread(() -> {
+            Workout workout = new Workout();
+            String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+            workout.setDate(date);
+            workout.setLaps(mElements);
+            App.getDatabase().workoutDao().insert(workout);
         }).start();
     }
 
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.btn_start: start();
-                    break;
-                case R.id.btn_pause: pause();
-                    break;
-                case R.id.btn_reset: reset();
-                    break;
-                case R.id.btn_lap: lap();
-                    break;
-            }
+    private View.OnClickListener clickListener = v -> {
+        switch (v.getId()) {
+            case R.id.btn_start: start();
+                break;
+            case R.id.btn_pause: pause();
+                break;
+            case R.id.btn_reset: reset();
+                break;
+            case R.id.btn_lap: lap();
+                break;
         }
     };
 
