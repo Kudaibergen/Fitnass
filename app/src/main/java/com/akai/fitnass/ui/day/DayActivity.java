@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.akai.fitnass.App;
@@ -20,7 +19,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class DayActivity extends AppCompatActivity {
     private static final String EXTRA_TAG = "id_workout";
-    private ArrayAdapter<String> adapter;
+    private WorkoutAdapter adapter;
     private ArrayList<String> laps;
 
     public static Intent getIntent(Context context, long idWorkout) {
@@ -38,7 +37,7 @@ public class DayActivity extends AppCompatActivity {
         final long id = getIntent().getLongExtra(EXTRA_TAG, 0L);
 
         ListView listView = findViewById(R.id.listView_day_laps);
-        adapter = new ArrayAdapter<>(DayActivity.this, android.R.layout.simple_list_item_1, laps);
+        adapter = new WorkoutAdapter(this, laps);
         listView.setAdapter(adapter);
 
         App.getDatabase().workoutDao().getById(id)

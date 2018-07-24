@@ -1,13 +1,10 @@
 package com.akai.fitnass.db.domain;
 
 import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class Workout {

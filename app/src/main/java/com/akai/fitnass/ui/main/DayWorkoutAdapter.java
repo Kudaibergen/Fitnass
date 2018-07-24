@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.akai.fitnass.R;
 import com.akai.fitnass.db.domain.Workout;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class DayWorkoutAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_day, parent, false);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {
@@ -47,15 +48,18 @@ public class DayWorkoutAdapter extends BaseAdapter {
         }
 
         Workout currentItem = getItem(position);
-        viewHolder.itemName.setText(currentItem.getDate());
+        viewHolder.id.setText(String.valueOf(currentItem.getId()));
+        viewHolder.date.setText(currentItem.getDate());
         return convertView;
     }
 
     private class ViewHolder {
-        TextView itemName;
+        private TextView id;
+        private TextView date;
 
         ViewHolder(View view) {
-            itemName = view.findViewById(android.R.id.text1);
+            id = view.findViewById(R.id.id_day);
+            date = view.findViewById(R.id.day_date);
         }
     }
 }
